@@ -8,4 +8,8 @@ toc: false
 ---
 Hello Everybody, I am different.
 
-![Desktop View](/assets/img/2023-06-23-First_product/mockup.png){: width="700" height="400" }
+
+![Desktop View](/assets/img/2023-06-23-First_product/kit_hx_m604_1.jpg){: width="600" height="600" }
+
+
+Wow, what a beautiful picture.
