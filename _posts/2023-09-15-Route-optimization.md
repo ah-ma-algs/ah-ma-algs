@@ -28,4 +28,8 @@ A scooter rental company needed to monitor and replace scooter batteries live wh
 A freight trucking company needed trucks to visit locations to pickup and deliver based on timewindows, item size, capacity and many other constraints, the main problem were not actually the pickup and delivery,  
 it was abiding to the breaks regulations of the [arbeitsagentur](https://www.arbeitsagentur.de/fuer-menschen-aus-dem-ausland/auslaendische-fachkraefte/saisonarbeit-in-deutschland/arbeitsrecht), there is a number of working hours limit per day, per week, extensions on such limit with a limit, multiple breaks per working hours batches.  
 
+There are many languages as well as python libraries out there for modelling optimization problems, and there are solvers for such models.
 
+A language such as [pymomo](https://pyomo.readthedocs.io/en/stable/) is a very powerful modelling tool where you can model your constraints but solving methods for such constraints can either be done manually or using a third party, some are [free](https://pyomo.readthedocs.io/en/stable/contributed_packages/index.html), others are commercial.
+
+When solving for [vrp](https://en.wikipedia.org/wiki/Vehicle_routing_problem) problems, you are better off with ortools as it has well developped solvers especially suited for vrp, it is developped in C++ but has a python interface that makes life tremendously easier while retaining virtually the same speed and most of the C++ version functionalities.
