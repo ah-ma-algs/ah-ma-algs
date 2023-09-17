@@ -33,3 +33,16 @@ There are many languages as well as python libraries out there for modelling opt
 A language such as [pymomo](https://pyomo.readthedocs.io/en/stable/) is a very powerful modelling tool where you can model your constraints but solving methods for such constraints can either be done manually or using a third party, some are [free](https://pyomo.readthedocs.io/en/stable/contributed_packages/index.html), others are commercial.
 
 When solving for [vrp](https://en.wikipedia.org/wiki/Vehicle_routing_problem) problems, you are better off with ortools as it has well developped solvers especially suited for vrp, it is developped in C++ but has a python interface that makes life tremendously easier while retaining virtually the same speed and most of the C++ version functionalities.
+
+
+Normally each location will have a timewindow that needs to be respected, how we represent time is the first thing to do, we can represent time in hour or minutes or seconds depending on the resolution that you would like but increasing the resolution means higher numbers which could potentially mean numerical overflow or speed penalties due to used precision.
+A day is 24 hours, 1440 minutes, 86400 seconds.
+Using seconds as a metric is very useless for most use cases as a few seconds difference is irrelevant, but a few minutes difference can be a problem.
+A truck 5 minutes late is 300 seconds late as well, do you see how in terms of numerical manipulation, one is much further away than the other.
+That means we convert our time in the durations matrix to minutes, that will be faster than implementing such a logic within the duration inference callback 
+
+First we start with the duration inference callback which depends on the duration between the start point and the end point along the arc.
+
+def time_callback(from_idx, to_idx):
+        from_node, to_node = manager.IndexToNode(from_idx), manager.IndexToNode(to_idx)
+        return data['durations_matrix'][from_node][to_node] + data['service_times'][from_node]
