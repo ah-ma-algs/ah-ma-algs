@@ -83,7 +83,44 @@ routing.AddDimension(routing.RegisterTransitCallback(time_callback),
                      SET_INITIAL_CUMUL_TO_ZERO,
                      Dimension_name)
 ```
-Assume an arc's start point is i and the end point is j.  
-A graph is a number of connected arcs, in our case, they have a beginning and and end.
-MAX_CUMUL is the maximum value that can be accumulated before reaching the last point along a full graph.
-MAX_SLACK is the maximum cumul that can be accumulated at location i if needed 
+Assume an arc's start point is `i` and the end point is `j`.  
+A graph is a number of connected arcs, in our case, they have a beginning and and end.  
+`MAX_CUMUL` is the maximum value that can be accumulated before reaching the last point along a full graph.  
+`MAX_SLACK` is the maximum slack that can be added to cumul at location i if needed such that we can reach location j at a certain value which can be pre-assigned.  
+We could use an analogy of a vehicle waiting at node i for a certain time (slack) to arrive (cumul) at a location j at the timewindow's start. `cumulj = cumuli + slacki + costij`   
+`SET_INITIAL_CUMUL_TO_ZERO` simply sets the start point's cumul of each graph to zero, for example, multiple vehicles can either all start at the same time at the day's start (zero cumul) or they can start at different times, in that case, a vehicle that starts one hour late is an hour that is assumed to have accumulated 1 hour at start.  
+`Dimension_name` is what we use to call the dimension to maniuplate later.  
+
+Next we need to initialize the Routing manager which is what handles the conversions from the upwork nodes representation to our own indices representation back and forth.  
+
+We give it the total number of nodes, number of start points/ number of separate graphs to have and whether they all start and end at the same location or they get to have their distinct start and end locations.  
+If its the same location, then the manager assumes the first location is the start location, otherwise, you have to input two arrays containing the start and end indices in your data which preferably should be at the start of your data.
+```python
+from ortools.constraint_solver import pywrapcp
+
+manager = pywrapcp.RoutingIndexManager(No_of_locations,
+                                       No_of_drivers,
+                                       0) # we prefer having 0 as the first index as the start of all graphs.
+
+
+
+manager = pywrapcp.RoutingIndexManager(No_of_locations,
+                                       No_of_drivers,
+                                       [0,2,4,6], # Start point indices in our data.
+                                       [1,3,5,7]) # End point indices in our data.
+# I prefer start and end point indices to be in that order to make it easier for me when preparing the data, but there is no governing rule.
+```
+
+
+
+
+
+Let's join the puzzle pieces together
+```python
+from ortools.constraint_solver import pywrapcp
+
+manager = pywrapcp.RoutingIndexManager(No_of_locations,
+                                       No_of_drivers,
+
+
+```
