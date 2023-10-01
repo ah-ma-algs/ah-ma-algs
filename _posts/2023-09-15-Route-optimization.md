@@ -87,7 +87,7 @@ Assume an arc's start point is `i` and the end point is `j`.
 A graph is a number of connected arcs, in our case, they have a beginning and and end.  
 `MAX_CUMUL` is the maximum value that can be accumulated before reaching the last point along a full graph.  
 `MAX_SLACK` is the maximum slack that can be added to cumul at location i if needed such that we can reach location j at a certain value which can be pre-assigned.  
-We could use an analogy of a vehicle waiting at node i for a certain time (slack) to arrive (cumul) at a location j at the timewindow's start. `cumulj = cumuli + slacki + costij`   
+We could use an analogy of a vehicle waiting at node i for a certain time (slack) to arrive (cumul) at a location j at the timewindow's start. cumul<sub>j</sub> = cumul<sub>i</sub> + slack<sub>i</sub> + cost<sub>ij</sub>
 `SET_INITIAL_CUMUL_TO_ZERO` simply sets the start point's cumul of each graph to zero, for example, multiple vehicles can either all start at the same time at the day's start (zero cumul) or they can start at different times, in that case, a vehicle that starts one hour late is an hour that is assumed to have accumulated 1 hour at start.  
 `Dimension_name` is what we use to call the dimension to maniuplate later.  
 
@@ -95,15 +95,18 @@ Next we need to initialize the Routing manager which is what handles the convers
 
 We give it the total number of nodes, number of start points/ number of separate graphs to have and whether they all start and end at the same location or they get to have their distinct start and end locations.  
 If its the same location, then the manager assumes the first location is the start location, otherwise, you have to input two arrays containing the start and end indices in your data which preferably should be at the start of your data.
+No_of_nodes is the number of start points plus end points for the drivers plus the number of locations that need to be visited by the drivers.
+
 ```python
 from ortools.constraint_solver import pywrapcp
 
+# Have a single location for all vehicles as the start and end point of each route.
 manager = pywrapcp.RoutingIndexManager(No_of_locations,
                                        No_of_drivers,
                                        0) # we prefer having 0 as the first index as the start of all graphs.
 
 
-
+# Have distinct locations for each vehicles's start and end locations.
 manager = pywrapcp.RoutingIndexManager(No_of_locations,
                                        No_of_drivers,
                                        [0,2,4,6], # Start point indices in our data.
@@ -112,8 +115,76 @@ manager = pywrapcp.RoutingIndexManager(No_of_locations,
 ```
 
 
+Since we are creating a routing model for this example, we feed the `RoutingModel` with the `RoutingIndexManager` to initialize the model with the manager's parameters 
+
+```python
+routing = pywrapcp.RoutingModel(manager)
+
+```
+Next we can add the dimension as done previously and then query it to add constraints, Lets add constraints such as setting a range on the cumul of a point, which translates to time windows in the routing problem or start and end times in job scheduling problems or start and end times in employee scheduling problems.
 
 
+```python
+dimension = routing.GetDimensionOrDie(dimension_name)
+for idx in range(driver_no):
+        index = routing.Start(idx)
+        dimension.CumulVar(index).SetRange(window_start, window_end)
+        index = routing.End(idx)
+        dimension.CumulVar(index).SetRange(window_start, window_end)
+
+#
+start_locations = driver_no * 2 # each driver gets a start and an end location, so in ortools's model, 
+for idx in range(start_locations, no_of_locations):
+        index = manager.NodeToIndex(idx)
+        dimension.CumulVar(index).SetRange(window_start, window_end)
+
+```
+
+But what if we want to allow multiple windows, multiple ranges where a graph can accumulate before arriving at such a point, Just like a vehicle can arrive at a location at 12:00- 13:00  or 14:00-15:00, That means 12:00 >= accumulated time => 13:00  || 14:00 >= accumulated time => 15:00 
+
+Assuming the interval is 0 => 16
+
+```python
+dimension.CumulVar(manager.NodeToIndex(index)).RemoveInterval(0,12)
+dimension.CumulVar(manager.NodeToIndex(index)).RemoveInterval(13,14)
+dimension.CumulVar(manager.NodeToIndex(index)).RemoveInterval(15,16)
+```
+
+or you can add
+That tells ortools, if a node is active then check if those conditions are obeyed, if true then output 1
+```python
+expression = routing.solver().ConditionalExpression(routing.ActiveVar(manager.NodeToIndex(index)), # if this node is chosen among the solution.
+                                                    ((dimension.CumulVar(manager.NodeToIndex(index)) < 13) and (dimension.CumulVar(manager.NodeToIndex(index)) > 12)) or 
+                                                    ((dimension.CumulVar(manager.NodeToIndex(index)) < 15) and (dimension.CumulVar(manager.NodeToIndex(index)) > 14)), # if this constraint is obeyed as well.
+                                                    1) # output 1 if the above constraint is obeyed
+routing.solver().AddConstraint(expression >= 1) # always ensure the above expression is obeyed
+```
+
+or you can add the constraints directly.
+```python
+routing.solver().Add(((dimension.CumulVar(manager.NodeToIndex(index)) < 13) and (dimension.CumulVar(manager.NodeToIndex(index)) > 12)) or \ 
+                      ((dimension.CumulVar(manager.NodeToIndex(index)) < 15) and (dimension.CumulVar(manager.NodeToIndex(index)) > 14))  
+                    ) # always ensure the above expression is obeyed
+```
+
+I have ordered them in the least buggy order that I have found through trials
+you can also set a [soft bound](https://github.com/google/or-tools/blob/858fa626959f7e386153af82756384b79f983b5a/ortools/constraint_solver/routing.h#L2236-L2249) to the cumul variable, If the value of the cumul variable breaks the bound, a cost proportional to the difference between this value and the bound is added to the cost function of the model cost = coefficient * (lower_bound - cumulVar)
+`dimension.SetCumulVarSoftLowerBound(manager.NodeToIndex(index), bound, coefficient)`
+`dimension.SetCumulVarSoftUpperBound(manager.NodeToIndex(index), bound, coefficient)`
+Mixing lower and upper bounds on an index are not recommended and bug inducing.
+
+
+Sometimes you need to add a capacity constraint, you can actually do it by assigining a limit on the cumul which is what was done earlier but lately they have provided a function specific to that.
+
+```python
+routing.AddDimensionWithVehicleCapacity(
+    demand_callback,
+    0,  # null capacity slack
+    vehicle_capacities_array,  # vehicle maximum capacities
+    True,  # start cumul to zero
+    "Capacity",
+)
+```
 
 Let's join the puzzle pieces together
 ```python
