@@ -37,12 +37,152 @@ https://en.wikipedia.org/wiki/Reflectance
 https://en.wikipedia.org/wiki/Specular_reflection
 
 
-![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/ٍSpecular_reflection.png){: width="640" height="363" } 
-_[Reflection types for media](https://en.wikipedia.org/wiki/Reflectance)_
+:-------------------------:|:-------------------------:
+![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/Specular_reflection.png)  |  ![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/Diffuse_reflection.png)
+[Specular reflection](https://en.wikipedia.org/wiki/Reflectance)            |  [Diffuse reflection](https://en.wikipedia.org/wiki/Reflectance)
 
-![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/ٍDiffuse_reflection.png){: width="640" height="363" } 
-_[Reflection types for media](https://en.wikipedia.org/wiki/Reflectance)_
+
+A skin's reflectance is mainly diffuse which Nextface models as a lambertian reflection with a distant light illumination.
+A good thing about NextFace is that it does 3D face reconstruction with explicit separation of face attributes, which is very useful as it later optimizes those attributes separately on later stages,
+we can also use those attributes for facial recognition.
+Such attributes are baked into each other, which is why we optimize them separately.
+in first stage, we optimize the pose, illumination, geometry,
+diffuse and specular albedos, statistically regularized by the 3DMM,
+while specular roughness remains fixed, using ray tracing also helps extract self shadows from interplay with face geometry
+In the second stage, we extract unconstrained diffuse reflectance, specular reflectance and roughness that capture specific facial attributes not modeled via statistical diffuse or specular albedos. 
+This staged optimization strategy adds structure and makes the under-constrained optimization problem tractable, leading to superior reconstruction vs. the naive approach
+
+
+A novel virtual light stage formulation, which in-conjunction
+with differentiable ray tracing, obtains more accurate scene illu-
+mination and reflectance, implicitly modeling self-shadows. The
+virtual light stage models, the switch from point to directional
+area lights and vice-versa, Sec. 3.
+• Face reflectance – diffuse, specular and roughness reconstruction
+that is scene illumination and self-shadows aware.
+• A robust optimization strategy that extracts semantically mean-
+ingful personalized face attributes, from unconstrained images,
+
+In-order to use unconstrained monocular images, statistical priors
+have been introduced [ZTB ∗ 18]. Such priors add structure to the re-
+construction formulation.
+
+
+While such approaches lead to highly accu-
+rate skin (diffuse and specular) reflectance modeling, they require
+controlled capture conditions and extensive calibration. Our aim,
+instead, is to robustly extract face attributes from unconstrained
+images, where a highly accurate skin reflectance models may not
+be applicable due to the low quality of input images
+
+Most face reconstruction approaches rely on a lightweight paramet-
+ric skin reflectance model using linear Lambertian models, where it
+is assumed that skin does not have specular attributes. This simpli-
+fication has shown great success for face reconstruction
+
+illumination model
+relying on Spherical Harmonics [RH01] that assume Lambertian re-
+flectance.
+
+Most approaches assume that illumination is mostly
+uniform resulting in self-shadow being baked into albedo attribute.
+
+a novel parameterized virtual area light
+stage is introduced that simulates real world illumination conditions.
+This illumination model is used together with ray tracing, that im-
+plicitly models self-shadow attributes. Consequently, it reconstructs
+geometric patch’s reflectance separating incurred shadows (Sec 3.3).
+To the best of our knowledge, the proposed method is the first to
+estimate reflectance (diffuse, specular, roughness), illumination, and
+self-shadows robustly from monocular images
+
+While quality
+face tracking has several advantages, such as reenactment, realis-
+tic virtual avatars [SSKS17, KGT ∗ 18], attributes separation opens
+up new possibilities. Photoshop-like applications for face portrait
+touch-up have been proposed. For example, [SPB ∗ 14] shows how
+style from one image can be transferred to another employing image-
+based methods for style transfer. [SHS ∗ 17] proposes a method for
+illumination transfer from source to target images, while [SBT ∗ 19]
+describes a method for portrait relighting. More recently, [ZBT ∗ 20]
+proposes a method for foreign shadow removal from images. Since
+our method can separates several face attributes, it makes many such
+applications feasible, as discussed in the paper.
+
+we introduce our optimiza-
+tion formulation that relies on differentiable ray tracing for image
+synthesis. By varying the number of ray-bounces against scene ge-
+ometries and subsequent indirect illumination, self-shadows can be
+modeled.
+
+By using area lights that can be turned on or off, and by
+controlling their intensity, position and surface area, we are capable
+of modeling several illumination and self-shadow scenarios.
+
+
+symmetric regularizer that prevents
+get baked into C.
+ˆ penalizing for a image-based
+baking of the residual shadow into C,
+ˆ C) the consis-
+imbalance between the two sides of the face
+
+
+
+One solution is to use high number of sample points for sampling
+along edges. However, this is computationally infeasible. Several
+techniques [LHJ19, LADL18] have been proposed to overcome this
+limitation. In our work, we rely on [LADL18]’s technique to explic-
+itly sample the geometry edges – a costly yet mandatory operation
+needed for correct geometric shape estimation
+
+solving for the rendering equation [Kaj86] via Monte Carlo
+ray tracing, very few points on the edge of the geometric shape are
+sampled, causing a discontinuity along the edges. As a result, back-
+propagation based gradients calculation fails to take into account
+sensitive information along the geometric edges. Consequently, the
+gradients on the edges remain noisy
+
+
+
+We note that [YS ∗ 18] and [LMG ∗ 20] estimates displace-
+ment/normal maps while our method does not. This requires high-
+quality and well lit input images (as reported by authors) for optimal
+results. Additionally, [LMG ∗ 20] estimates reflectance maps for full
+face head in the UV space, whereas our method restricts recon-
+struction to frontal face only. [SSD ∗ 20] estimates light (three bands
+spherical harmonics) but, may not correctly estimate personalized
+reflectance outside the statistical albedo space. A complete catalog
+of comparisons against these methods is available in the supplemen-
+tary material (section C).
+
+Another limitation of our method is reliance on statistical albedo
+priors (Optimization, Stage I) that do not model certain skin tones
+
+We note that our albedos (esp. roughness) attributes are view and
+input image illumination condition dependent, however, when avail-
+able, statistical priors help give meaningful estimates. Here, our
+method relies on symmetry, consistency and smoothness regulariz-
+ers (Eq 6) to avoid overfittingHere, our
+method relies on symmetry, consistency and smoothness regulariz-
+ers (Eq 6) to avoid overfitting. In some cases, due to these regulariz-
+ers, person specific attributes are not captured. Additionally, while
+the consistency and symmetry regularizers (Stage-II) help avoid bak-
+ing shadows in the final albedo, in some cases, when the optimized
+light and consequent shadows are inaccurate, some light/shadow
+patches may appear in the estimated albedos
+
+
+
+Currently, we use single bounce rays for illumi-
+nation modeling due to lack of external scene geometries, a natural
+extension is to model multi-ray bounces for softer shadows.
+
+
+read from page 9
+
 
 
 https://www.pluralsight.com/blog/film-games/bump-normal-and-displacement-maps
 
+https://en.wikipedia.org/wiki/Albedo
