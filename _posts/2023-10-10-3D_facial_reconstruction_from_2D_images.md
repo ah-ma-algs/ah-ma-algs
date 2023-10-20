@@ -30,12 +30,12 @@ It uses DeepSpeech recurrent neural networks using the latent 3D model space and
 
 Li et al. [45] proposed SymmFCNet, a symmetry consistent convolutional neural network for reconstructing missing pixels on the one-half face using the other half. SymmFCNet consisted of illumination-reweighted warping and generative reconstruction subnet. The dependency on multiple networks is a significant drawback
 
-## Skin modeling
-We discuss some skin features that can be modeled to give a better representation of the face to appear more realistic.
+## nextFace
+We discuss some skin features that can be modeled to give a better representation of the face to appear more realistic.  
 
 ### Reflectance
-Reflectance is a material's ability to reflect incident radiant energy, in our case, that energy is light.
-Most of surfaces's reflectance can be divided into specular and diffuse reflectance.
+Reflectance is a material's ability to reflect incident radiant energy, in our case, that energy is light.  
+Most of the surfaces's reflectance can be divided into specular and diffuse reflectance.  
 For surfaces such as those of polished metals, water and glass/mirror surfaces, reflection can be assumed to be all specular.
 For surfaces such as a human face or matte white paint, reflection can be assumed to be all diffuse.
 
@@ -48,17 +48,18 @@ https://en.wikipedia.org/wiki/Specular_reflection
 [Specular reflection](https://en.wikipedia.org/wiki/Reflectance)            |  [Diffuse reflection](https://en.wikipedia.org/wiki/Reflectance)
 
 
-A skin's reflectance is mainly diffuse which Nextface models as a lambertian reflection with a distant light illumination.
-A good thing about NextFace is that it does 3D face reconstruction with explicit separation of face attributes, which is very useful as it later optimizes those attributes separately on later stages,
-we can also use those attributes for facial recognition.
-Such attributes are baked into each other, which is why we optimize them separately.
-in first stage, we optimize the pose, illumination, geometry,
-diffuse and specular albedos, statistically regularized by the 3DMM,
-while specular roughness remains fixed, using ray tracing also helps extract self shadows from interplay with face geometry
+A skin's reflectance is mainly diffuse which Nextface models as a lambertian reflection with a distant light illumination.  
+A good thing about NextFace is that it does 3D face reconstruction with explicit separation of face attributes, which is very useful as it later optimizes those attributes separately on later stages.  
+We can also use those attributes for facial recognition.  
+Such attributes are baked into each other, which is why we optimize them separately.  
+In the first stage, we optimize the pose, illumination, geometry, diffuse and specular albedos, statistically regularized by the 3DMM,  
+while specular roughness remains fixed, using ray tracing also helps extract self shadows from interplay with face geometry.  
 In the second stage, we extract unconstrained diffuse reflectance, specular reflectance and roughness that capture specific facial attributes not modeled via statistical diffuse or specular albedos. 
-This staged optimization strategy adds structure and makes the under-constrained optimization problem tractable, leading to superior reconstruction vs. the naive approach
+This staged optimization strategy adds structure and makes the under-constrained optimization problem tractable, leading to superior reconstruction vs. the naive approach.
 
+To capture a skin's reflectance we need a light stage to model the input image's lighting conditions, That's why we construct a light stage.
 
+### Light stage
 A novel virtual light stage formulation, which in-conjunction
 with differentiable ray tracing, obtains more accurate scene illu-
 mination and reflectance, implicitly modeling self-shadows. The
