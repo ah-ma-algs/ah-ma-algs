@@ -7,8 +7,13 @@ Recent learning-based approaches, in which models are trained by single-view ima
 
 I will use [NextFace](https://github.com/abdallahdib/NextFace) which gave me the following results, after many modifications for stability and better results, but I think discussing other models will be very fitting to better understand what we use, and why we chose it for this particular application.  
 
-Such results can vary drastially from one subject to another, some models can outperform the others in capturing details and depth on perfect lighting conditions but fail drastically when met with self shadows, lighting shadows and unconditional diffuse.  
+![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images.md/render_0.png){: width="640" height="363" } 
+_[Well lit image example.]_
 
+![Desktop View](/assets/img/2023-10-05-Route-optimization-using-ortools/Hugo.png){: width="640" height="363" } 
+_[A very hard image with self shadows and bad lighting.]_
+
+Such results can vary drastially from one subject to another, some models can outperform the others in capturing details and depth on perfect lighting conditions but fail drastically when met with self shadows, lighting shadows and unconditional diffuse.  
 
 We can start with discussing the application as it can drastically affect the chosen method, Normally we either repurpose/train a method/network for our needs or we are lucky enough to have something that already fits out needs.  
 
@@ -17,7 +22,9 @@ I will discuss some of the applications I encountered below, you can directly sk
 ## Applications  
 3DMM based approaches perform facial biometrics extraction which means they can be useful for applications such as facial recognition as it extracts useful info other than just the facial landmarks.  
 
-Assuming we need a 3D caricature drawing system, Han et al.](https://ieeexplore.ieee.org/document/8580421) proposed a sketching system that creates 3D caricature photos by first interpolating from a 2D image to 3D using a vertex wise exaggeration map then modifying the facial feature curves, two images are generated using the 3D generated mesh as a guide for the warping of the 2D image and also for the image enhancement as the output is always blurry, and occlusions introduced failure, and as always with all of the networks, darker skin tones are much more challenging.  
+Assuming we need a 3D caricature drawing system, Han et al.](https://ieeexplore.ieee.org/document/8580421) proposed a sketching system that creates 3D caricature photos by first interpolating from a 2D image to 3D using a vertex wise exaggeration map then modifying the facial feature curves.  
+two images are generated using the 3D generated mesh as a guide for the warping of the 2D image and also for the image enhancement as the output is always blurry, and occlusions introduced failure, and as always with all of the networks, darker skin tones are much more challenging.  
+
 
 [Zhang et al.](https://arxiv.org/abs/2007.12494) on the other hand proposed an automatic landmark detection, occlusion-aware multi-view synthesis method then 3D face restoration for caricatures.   
 It aims to solve depth ambiguity and occlusion loss, which it does through creating a relationship between 2D images and 3D images using a covisiblity map that stores the mask of covisible pixels for
