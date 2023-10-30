@@ -5,7 +5,7 @@ Recent learning-based approaches, in which models are trained by single-view ima
 
 3D face reconstruction techniques are generally categorized into some classes such as 3DMM, one shot learning, epipolar geomtry and maybe even shape from shading but as you go on, you will find that the most successive models are the hybrid ones and they all do use some methods from different classes in tandem.  
 
-I will use [NextFace](https://github.com/abdallahdib/NextFace) which gave me the following results, after many modifications for stability and better results, but I think discussing other models will be very fitting to better understand what we use, and why we chose it for this particular application.  
+I will use [NextFace](https://github.com/abdallahdib/NextFace) which gave me the following results after many modifications for stability and better results, but I think discussing other models will be very fitting to better understand what we use, and why we chose it for this particular application.  
 
 ![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images.md/render_0.png){: width="640" height="363" } 
 _[Well lit image example.]_
@@ -24,7 +24,10 @@ I will discuss some of the applications I encountered below, you can directly sk
 
 Assuming we need a 3D caricature drawing system, Han et al.](https://ieeexplore.ieee.org/document/8580421) proposed a sketching system that creates 3D caricature photos by first interpolating from a 2D image to 3D using a vertex wise exaggeration map then modifying the facial feature curves.  
 two images are generated using the 3D generated mesh as a guide for the warping of the 2D image and also for the image enhancement as the output is always blurry, and occlusions introduced failure, and as always with all of the networks, darker skin tones are much more challenging.  
+Below is an example that shows how good it can modify facial features based on a simple drawing, It can be used to modift facial features for face editing apps such as faceapp(https://www.faceapp.com/) reducing or englarging certain features such as noses, or eyes.  
 
+![Desktop View](/assets/img/2023-10-05-Route-optimization-using-ortools/Caricature-shop.png){: width="640" height="363" } 
+_[An example of exaggerated facial features. but they do expose its true potential.]_
 
 [Zhang et al.](https://arxiv.org/abs/2007.12494) on the other hand proposed an automatic landmark detection, occlusion-aware multi-view synthesis method then 3D face restoration for caricatures.   
 It aims to solve depth ambiguity and occlusion loss, which it does through creating a relationship between 2D images and 3D images using a covisiblity map that stores the mask of covisible pixels for
@@ -32,6 +35,9 @@ each target-source view pair to solve self-occlusion which is somewhat similar t
 It also introduced novel loss functions for multi-view consistency,   
 It uses A ResNet model for encoding the input image to a latent space, and a decoder with a fully connected layer to generate 3D landmarks on the caricature.  
 
+![Desktop View](/assets/img/2023-10-05-Route-optimization-using-ortools/Multi-view.png){: width="640" height="363" } 
+_[An example of exaggerated facial features. but they do expose its true potential.]_
+  
 [Thies et al.](https://arxiv.org/abs/1912.05566) is an audio-driven facial reenactment framework driven by a deep neural network that to output a photo-realisitic video of the target in sync with the audio a latent 3D face model space.  
 It uses DeepSpeech recurrent neural networks using the latent 3D model space and Audio2ExpressionNet was responsible for converting the input audio to a particular facial expression.
 
