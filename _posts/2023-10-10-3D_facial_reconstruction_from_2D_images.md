@@ -7,10 +7,10 @@ Recent learning-based approaches, in which models are trained by single-view ima
 
 I will use [NextFace](https://github.com/abdallahdib/NextFace) which gave me the following results after many modifications for stability and better results, but I think discussing other models will be very fitting to better understand what we use, and why we chose it for this particular application.  
 
-![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images.md/render_0.png){: width="640" height="363" } 
+![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/render_0.png){: width="640" height="363" } 
 _[Well lit image example.]_
 
-![Desktop View](/assets/img/2023-10-05-Route-optimization-using-ortools/Hugo.png){: width="640" height="363" } 
+![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/Hugo.png){: width="640" height="363" } 
 _[A very hard image with self shadows and bad lighting.]_
 
 Such results can vary drastially from one subject to another, some models can outperform the others in capturing details and depth on perfect lighting conditions but fail drastically when met with self shadows, lighting shadows and unconditional diffuse.  
@@ -26,7 +26,7 @@ Assuming we need a 3D caricature drawing system, Han et al.](https://ieeexplore.
 two images are generated using the 3D generated mesh as a guide for the warping of the 2D image and also for the image enhancement as the output is always blurry, and occlusions introduced failure, and as always with all of the networks, darker skin tones are much more challenging.  
 Below is an example that shows how good it can modify facial features based on a simple drawing, It can be used to modift facial features for face editing apps such as faceapp(https://www.faceapp.com/) reducing or englarging certain features such as noses, or eyes.  
 
-![Desktop View](/assets/img/2023-10-05-Route-optimization-using-ortools/Caricature-shop.png){: width="640" height="363" } 
+![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/Caricature-shop.png){: width="640" height="363" } 
 _[An example of exaggerated facial features. but they do expose its true potential.]_
 
 [Zhang et al.](https://arxiv.org/abs/2007.12494) on the other hand proposed an automatic landmark detection, occlusion-aware multi-view synthesis method then 3D face restoration for caricatures.   
@@ -34,12 +34,16 @@ It aims to solve depth ambiguity and occlusion loss, which it does through creat
 each target-source view pair to solve self-occlusion which is somewhat similar to NextFace's weightDiffuseSymmetryReg.  
 It also introduced novel loss functions for multi-view consistency,   
 It uses A ResNet model for encoding the input image to a latent space, and a decoder with a fully connected layer to generate 3D landmarks on the caricature.  
+Although it looks inferior to many other methods with regards to quality, the covisibility map is where its true potential lies.  
 
-![Desktop View](/assets/img/2023-10-05-Route-optimization-using-ortools/Multi-view.png){: width="640" height="363" } 
-_[An example of exaggerated facial features. but they do expose its true potential.]_
+![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/Multi-view.png){: width="640" height="363" } 
+_[Very nice.]_
   
-[Thies et al.](https://arxiv.org/abs/1912.05566) is an audio-driven facial reenactment framework driven by a deep neural network that to output a photo-realisitic video of the target in sync with the audio a latent 3D face model space.  
+[Thies et al.](/arxiv.org/abs/1912.05566) is an audio-driven facial reenactment framework driven by a deep neural network that to output a photo-realisitic video of the target in sync with the audio a latent 3D face model space.  
 It uses DeepSpeech recurrent neural networks using the latent 3D model space and Audio2ExpressionNet was responsible for converting the input audio to a particular facial expression.
+
+![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/TTS.gif){: width="640" height="363" } 
+_[Example output]_
 
 Li et al. [45] proposed SymmFCNet, a symmetry consistent convolutional neural network for reconstructing missing pixels on the one-half face using the other half. SymmFCNet consisted of illumination-reweighted warping and generative reconstruction subnet. The dependency on multiple networks is a significant drawback
 
