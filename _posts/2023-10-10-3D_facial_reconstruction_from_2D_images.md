@@ -7,11 +7,16 @@ Recent learning-based approaches, in which models are trained by single-view ima
 
 I will use [NextFace](https://github.com/abdallahdib/NextFace) which gave me the following results after many modifications for stability and better results, but I think discussing other models will be very fitting to better understand what we use, and why we chose it for this particular application.  
 
-![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/render_0.png){: width="640" height="363" } 
+![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/Faces.png){: width="640" height="363" } 
 _[Well lit image example.]_
 
-![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/Hugo.png){: width="640" height="363" } 
+
+I also tested many parameters on such a challenging image which I will discuss later.
+![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/hugo.jpg){: width="640" height="363" } 
 _[A very hard image with self shadows and bad lighting.]_
+
+![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/Hugo.png){: width="640" height="363" } 
+_[different outupts due to interplaying parameters.]_
 
 Such results can vary drastially from one subject to another, some models can outperform the others in capturing details and depth on perfect lighting conditions but fail drastically when met with self shadows, lighting shadows and unconditional diffuse.  
 
@@ -45,7 +50,10 @@ It uses DeepSpeech recurrent neural networks using the latent 3D model space and
 ![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/TTS.gif){: width="640" height="363" } 
 _[Example output]_
 
-Li et al. [45] proposed SymmFCNet, a symmetry consistent convolutional neural network for reconstructing missing pixels on the one-half face using the other half. SymmFCNet consisted of illumination-reweighted warping and generative reconstruction subnet. The dependency on multiple networks is a significant drawback
+Li et al. [45] proposed SymmFCNet, a symmetry consistent convolutional neural network for reconstructing missing pixels on the one-half face using the other half. SymmFCNet consisted of illumination-reweighted warping and generative reconstruction subnet. The dependency on multiple networks is a significant drawback.
+
+![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/symfccnet.png){: width="640" height="363" } 
+_[Example output]_(https://github.com/csxmli2016/SymmFCNet)
 
 ## nextFace
 We discuss some skin features that can be modeled to give a better representation of the face to appear more realistic.  
