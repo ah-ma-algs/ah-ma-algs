@@ -27,13 +27,13 @@ I will discuss some of the applications I encountered below, you can directly sk
 ## Applications  
 3DMM based approaches perform facial biometrics extraction which means they can be useful for applications such as facial recognition as it extracts useful info other than just the facial landmarks.  
 
-Assuming we need a 3D caricature drawing system, Han et al.](https://ieeexplore.ieee.org/document/8580421) proposed a sketching system that creates 3D caricature photos by first interpolating from a 2D image to 3D using a vertex wise exaggeration map then modifying the facial feature curves.  
+Assuming we need a 3D caricature drawing system, Han et al.] (https://ieeexplore.ieee.org/document/8580421) proposed a sketching system that creates 3D caricature photos by first interpolating from a 2D image to 3D using a vertex wise exaggeration map then modifying the facial feature curves.  
 two images are generated using the 3D generated mesh as a guide for the warping of the 2D image and also for the image enhancement as the output is always blurry, and occlusions introduced failure, and as always with all of the networks, darker skin tones are much more challenging.  
-Below is an example that shows how good it can modify facial features based on a simple drawing, It can be used to modift facial features for face editing apps such as faceapp(https://www.faceapp.com/) reducing or englarging certain features such as noses, or eyes.  
-
+Below is an example that shows how good it can modify facial features based on a simple drawing, It can be used to modify facial features for face editing apps such as faceapp (https://www.faceapp.com/) reducing or englarging certain features such as noses, or eyes.  
+  
 ![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/Caricature-shop.png){: width="640" height="363" } 
-_[An example of exaggerated facial features. but they do expose its true potential.]_
-
+_[An example of exaggerated facial features. but they do expose its true potential.]_  
+  
 [Zhang et al.](https://arxiv.org/abs/2007.12494) on the other hand proposed an automatic landmark detection, occlusion-aware multi-view synthesis method then 3D face restoration for caricatures.   
 It aims to solve depth ambiguity and occlusion loss, which it does through creating a relationship between 2D images and 3D images using a covisiblity map that stores the mask of covisible pixels for
 each target-source view pair to solve self-occlusion which is somewhat similar to NextFace's weightDiffuseSymmetryReg.  
@@ -42,17 +42,17 @@ It uses A ResNet model for encoding the input image to a latent space, and a dec
 Although it looks inferior to many other methods with regards to quality, the covisibility map is where its true potential lies.  
 
 ![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/Multi-view.png){: width="640" height="363" } 
-_[Very nice.]_
-  
+_[Very nice.]_  
+    
 [Thies et al.](/arxiv.org/abs/1912.05566) is an audio-driven facial reenactment framework driven by a deep neural network that to output a photo-realisitic video of the target in sync with the audio a latent 3D face model space.  
-It uses DeepSpeech recurrent neural networks using the latent 3D model space and Audio2ExpressionNet was responsible for converting the input audio to a particular facial expression.
-
+It uses DeepSpeech recurrent neural networks using the latent 3D model space and Audio2ExpressionNet was responsible for converting the input audio to a particular facial expression.  
+  
 ![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/TTS.gif){: width="640" height="363" } 
 _[Example output]_
 
 Li et al. [45] proposed SymmFCNet, a symmetry consistent convolutional neural network for reconstructing missing pixels on the one-half face using the other half. SymmFCNet consisted of illumination-reweighted warping and generative reconstruction subnet. The dependency on multiple networks is a significant drawback.
 
-![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/symfccnet.png){: width="640" height="363" } 
+![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/Symfccnet.png){: width="640" height="363" } 
 _[Example output]_(https://github.com/csxmli2016/SymmFCNet)
 
 ## nextFace
@@ -78,18 +78,16 @@ A good thing about NextFace is that it does 3D face reconstruction with explicit
 We can also use those attributes for facial recognition.  
 Such attributes are baked into each other, which is why we optimize them separately.  
 In the first stage, we optimize the pose, illumination, geometry, diffuse and specular albedos, statistically regularized by the 3DMM,  
-while specular roughness remains fixed, using ray tracing also helps extract self shadows from interplay with face geometry.  
-In the second stage, we extract unconstrained diffuse reflectance, specular reflectance and roughness that capture specific facial attributes not modeled via statistical diffuse or specular albedos. 
+while specular roughness remains fixed.  
+using ray tracing also helps extract self shadows from interplay with face geometry.  
+In the second stage, we extract unconstrained diffuse reflectance, specular reflectance and roughness that capture specific facial attributes not modeled via statistical diffuse or specular albedos.  
 This staged optimization strategy adds structure and makes the under-constrained optimization problem tractable, leading to superior reconstruction vs. the naive approach.
 
 To capture a skin's reflectance we need a light stage to model the input image's lighting conditions, That's why we construct a light stage.
 
 ### Light stage
-A novel virtual light stage formulation, which in-conjunction
-with differentiable ray tracing, obtains more accurate scene illu-
-mination and reflectance, implicitly modeling self-shadows. The
-virtual light stage models, the switch from point to directional
-area lights and vice-versa, Sec. 3.
+A novel virtual light stage formulation, which in-conjunction with differentiable ray tracing, obtains more accurate scene illumination and reflectance, implicitly modeling self-shadows. The
+virtual light stage models, the switch from point to directional area lights and vice-versa, Sec. 3.
 • Face reflectance – diffuse, specular and roughness reconstruction
 that is scene illumination and self-shadows aware.
 • A robust optimization strategy that extracts semantically mean-
