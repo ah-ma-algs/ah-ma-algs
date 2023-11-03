@@ -7,6 +7,8 @@ Recent learning-based approaches, in which models are trained by single-view ima
 
 I will use [NextFace](https://github.com/abdallahdib/NextFace) which gave me the following results after many modifications for stability and better results, but I think discussing other models will be very fitting to better understand what we use, and why we chose it for this particular application.  
 
+I also noticed that many parts of NextFace's code was adopted from other sources without further scrutinizing them, not noticing that some of that code was written, constricted by C++'s limitations and when put into python, could have been rewritten to get as low as half the execution time or even more, which I modified and tested myself.
+
 ![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/Faces.png){: width="640" height="363" } 
 _[Well lit image example.]_
 
@@ -86,12 +88,23 @@ This staged optimization strategy adds structure and makes the under-constrained
 To capture a skin's reflectance we need a light stage to model the input image's lighting conditions, That's why we construct a light stage.
 
 ### Light stage
-A novel virtual light stage formulation, which in-conjunction with differentiable ray tracing, obtains more accurate scene illumination and reflectance, implicitly modeling self-shadows. The
-virtual light stage models, the switch from point to directional area lights and vice-versa, Sec. 3.
-• Face reflectance – diffuse, specular and roughness reconstruction
-that is scene illumination and self-shadows aware.
-• A robust optimization strategy that extracts semantically mean-
-ingful personalized face attributes, from unconstrained images,
+A novel virtual light stage is formulated using differentiable ray tracing, obtaining more accurate scene illumination and reflectance, implicitly modeling self-shadows. 
+The virtual light stage models, the switch from point to directional area lights and vice-versa.  
+
+![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/Light_stage.png){: width="640" height="363" } 
+_[icosahedron light stage.]_(https://arxiv.org/abs/2101.05356)
+
+Such a light stage enables modeling face reflectance (diffuse, specular) and roughness reconstruction that is basically scene illumination and self-shadows aware.
+
+A robust optimization strategy that extracts semantically meaningful personalized face attributes, from unconstrained images,  Consequently, it reconstructs geometric patch’s reflectance separating incurred shadows   
+
+we introduce our optimization formulation that relies on differentiable ray tracing for image synthesis. By varying the number of ray-bounces against scene geometries and subsequent indirect illumination, self-shadows can be
+modeled.
+
+By using area lights that can be turned on or off, and by controlling their intensity, position and surface area, we are capable of modeling several illumination and self-shadow scenarios.
+
+
+To model incoming light on face geometry, we explore various geometric configurations such as a tetrahedron, octahedron, icosahedron and spherical – convex 3D manifolds. Such configurations’ triangles  can be thought of as area lights, directed towards the manifold’s origin.
 
 In-order to use unconstrained monocular images, statistical priors
 have been introduced [ZTB ∗ 18]. Such priors add structure to the re-
