@@ -1,4 +1,4 @@
-3D Facial reconstruction can be broadly defined as interpolating facial features from a 2D image/plane to 3D space.  
+الوهاب3D Facial reconstruction can be broadly defined as interpolating facial features from a 2D image/plane to 3D space.  
 The complexity arises due to environmental factors, application needs and computational complexity.  
 
 Recent learning-based approaches, in which models are trained by single-view images have shown promising results for monocular 3D face reconstruction, but they suffer from the ill-posed face problem and depth ambiguity issues.  
@@ -106,12 +106,23 @@ The light stage was implemented in accordance with a design philosophy that a fa
 icosahedron provides optimal complexity for illumination modeling.
 
 Light is now represented as area lights derived from the face triangles of the icosahedron, such that each area light has the following independent parameters:  
-- distance d j ∈ R from the face geometry (atthe origin).
-- relative surface area a j ∈ R.
-- local position p j ∈ R 2 of the light center in barycentric coordinates within the face triangle.
-- perceived intensity i j ∈ R 3.
+- distance d<sub>j</sub> ∈ R from the face geometry (atthe origin).
+- relative surface area a<sub>j</sub> ∈ R.
+- local position p<sub>j</sub> ∈ R<sup>2</sup> of the light center in barycentric coordinates within the face triangle.
+- perceived intensity i<sub>j</sub> ∈ R<sup>3</sup>.
+   
+d<sub>j</sub> is the distance from the area light's origin to the face area's origin.  
+a<sub>j</sub> is the surface area of the light relative to the face area's triangle, 0 being a point light, and being the maximum surface area of the triangle.
+p<sub>j</sub> is the light's center within the simplex of the face.
+i<sub>j can be set to 0 to disable a light area or larger to modify overall illumination intensity.
 
+Next we 
+$$ x = {-b \pm \sqrt{b^2-4ac} \over 2a} $$
 
+I j =
+d 2 j
+i j
+a j
 A robust optimization strategy that extracts semantically meaningful personalized face attributes, from unconstrained images,  Consequently, it reconstructs geometric patch’s reflectance separating incurred shadows   
 
 we introduce our optimization formulation that relies on differentiable ray tracing for image synthesis. By varying the number of ray-bounces against scene geometries and subsequent indirect illumination, self-shadows can be
