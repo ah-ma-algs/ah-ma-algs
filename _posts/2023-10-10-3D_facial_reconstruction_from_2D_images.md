@@ -1,4 +1,7 @@
-الوهاب3D Facial reconstruction can be broadly defined as interpolating facial features from a 2D image/plane to 3D space.  
+
+ 
+
+3D Facial reconstruction can be broadly defined as interpolating facial features from a 2D image/plane to 3D space.  
 The complexity arises due to environmental factors, application needs and computational complexity.  
 
 Recent learning-based approaches, in which models are trained by single-view images have shown promising results for monocular 3D face reconstruction, but they suffer from the ill-posed face problem and depth ambiguity issues.  
@@ -112,19 +115,20 @@ Light is now represented as area lights derived from the face triangles of the i
 - perceived intensity i<sub>j</sub> ∈ R<sup>3</sup>.
    
 d<sub>j</sub> is the distance from the area light's origin to the face area's origin.  
-a<sub>j</sub> is the surface area of the light relative to the face area's triangle, 0 being a point light, and being the maximum surface area of the triangle.
-p<sub>j</sub> is the light's center within the simplex of the face.
-i<sub>j</sub> can be set to 0 to disable a light area or larger to modify overall illumination intensity.
+a<sub>j</sub> is the surface area of the light relative to the face area's triangle, 0 being a point light, and being the maximum surface area of the triangle.  
+p<sub>j</sub> is the light's center within the simplex of the face.  
+i<sub>j</sub> can be set to 0 to disable a light area or larger to modify overall illumination intensity.  
 
-This sentence uses `$` delimiters to show math inline:  $\sqrt{3x-1}+(1+x)^2$
+I<sub>j</sub> $= {{d_j^2} \over {a_i}} i_j$  
 
+Such a representation of light intensity decouples light parameters making $i_j$ an easily controllable parameter for changing light intensity as all the parameters are orthogonal.  
 
-I j =
-d 2 j
-i j
-a j
-A robust optimization strategy that extracts semantically meaningful personalized face attributes, from unconstrained images,  Consequently, it reconstructs geometric patch’s reflectance separating incurred shadows   
+Each light $γ_j$ = { $d_j$, $a_j$, $p_j$, $i_j$ } can move according to its distance $d_j$ from the geometry's center, its size remaining proportional to $d_j, a_j$ and $p_j$ are used to control position and size of each light.  
+$γ_j$ within the surface defined by the homothetic face, the icosahedron face scaled by $d_j$.  
+Thus, the area light remains parallel to original icosahedron’s face.  
+A robust optimization strategy that extracts semantically meaningful personalized face attributes, from unconstrained images, Consequently, it reconstructs geometric patch’s reflectance separating incurred shadows   
 
+When we discuss the code 
 we introduce our optimization formulation that relies on differentiable ray tracing for image synthesis. By varying the number of ray-bounces against scene geometries and subsequent indirect illumination, self-shadows can be
 modeled.
 
