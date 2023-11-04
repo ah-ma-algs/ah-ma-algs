@@ -114,10 +114,10 @@ Light is now represented as area lights derived from the face triangles of the i
 d<sub>j</sub> is the distance from the area light's origin to the face area's origin.  
 a<sub>j</sub> is the surface area of the light relative to the face area's triangle, 0 being a point light, and being the maximum surface area of the triangle.
 p<sub>j</sub> is the light's center within the simplex of the face.
-i<sub>j can be set to 0 to disable a light area or larger to modify overall illumination intensity.
+i<sub>j</sub> can be set to 0 to disable a light area or larger to modify overall illumination intensity.
 
-Next we 
-$$ x = {-b \pm \sqrt{b^2-4ac} \over 2a} $$
+This sentence uses `$` delimiters to show math inline:  $\sqrt{3x-1}+(1+x)^2$
+
 
 I j =
 d 2 j
