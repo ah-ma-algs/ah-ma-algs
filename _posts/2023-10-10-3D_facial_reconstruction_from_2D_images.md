@@ -128,6 +128,13 @@ $γ_j$ within the surface defined by the homothetic face, the icosahedron face s
 Thus, the area light remains parallel to original icosahedron’s face.  
 A robust optimization strategy that extracts semantically meaningful personalized face attributes, from unconstrained images, Consequently, it reconstructs geometric patch’s reflectance separating incurred shadows   
 
+Spherical harmonics are a set of eigenfunctions used to represent functions on the surface of a sphere, they form a complete set of orthonormal functions meaning they are completely independent.  
+They are the higher dimensional analogy of the fourier series solving for periodic functions in the cartesian coordinates system.  
+They solve for 3D eigenfunctions of the angular portion of laplace's equations in spherical coordinates with an assymetrical azimuth, basically solving for partial differential functions.   
+They are described as harmonic because they can be expressed as a sum of circular functions as angular frequency.  
+NextFace uses them here to model light projection on a face.
+They use an adaptation of such functions from the very famous paper by [Robin Green](https://3dvar.com/Green2003Spherical.pdf).  
+
 When we discuss the code 
 we introduce our optimization formulation that relies on differentiable ray tracing for image synthesis. By varying the number of ray-bounces against scene geometries and subsequent indirect illumination, self-shadows can be
 modeled.
