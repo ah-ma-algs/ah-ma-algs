@@ -135,6 +135,15 @@ They are described as harmonic because they can be expressed as a sum of circula
 NextFace uses them here to model light projection on a face.
 They use an adaptation of such functions from the very famous paper by [Robin Green](https://3dvar.com/Green2003Spherical.pdf).  
 
+The functions we use are orthonormal.  
+Orthogonal polynomials are sets of polynomials that return a constant when you integrate the product of two of them.  
+Orthonormal polynomials are special subset of those where it either returns a 0 or a 1.  
+ِLegendre polynomials are a subset of those studied by Legendre.  
+associated Legendre polynomials are a subset of those returning real numbers, they have two arguments, l and m, such that l takes any positive integer value starting 0 and m ∈ \[0,l]   
+
+
+
+
 When we discuss the code 
 we introduce our optimization formulation that relies on differentiable ray tracing for image synthesis. By varying the number of ray-bounces against scene geometries and subsequent indirect illumination, self-shadows can be
 modeled.
