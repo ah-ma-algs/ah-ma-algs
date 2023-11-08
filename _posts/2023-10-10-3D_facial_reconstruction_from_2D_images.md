@@ -1,6 +1,10 @@
 
  
 
+ 
+$$\left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)$$
+
+
 3D Facial reconstruction can be broadly defined as interpolating facial features from a 2D image/plane to 3D space.  
 The complexity arises due to environmental factors, application needs and computational complexity.  
 
@@ -10,7 +14,9 @@ Recent learning-based approaches, in which models are trained by single-view ima
 
 I will use [NextFace](https://github.com/abdallahdib/NextFace) which gave me the following results after many modifications for stability and better results, but I think discussing other models will be very fitting to better understand what we use, and why we chose it for this particular application.  
 
-I also noticed that many parts of NextFace's code was adopted from other sources without further scrutinizing them, not noticing that some of that code was written, constricted by C++'s limitations and when put into python, could have been rewritten to get as low as half the execution time or even more, which I modified and tested myself.
+I also noticed that many parts of NextFace's code were adopted from other sources without further scrutinizing them, not noticing that some of that code was written, constricted by C++'s limitations and when put into python, could have been rewritten to get as low as half the execution time or even more, which I modified and tested myself.
+
+The modifications I introduced to the code, got better details in shadows and gets a speed increase of 25-40% depending on the number of bands(spherical harmonics) used, as the demand for better quality increases, my modifications seem to have a more prominent effect than using the original code which also highlights the cause to their remark of the diminishing returns when increasing the number of bands.
 
 ![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/Faces.png){: width="640" height="363" } 
 _[Well lit image example.]_
@@ -141,10 +147,33 @@ Orthonormal polynomials are special subset of those where it either returns a 0 
 ِLegendre polynomials are a subset of those studied by Legendre.  
 associated Legendre polynomials are a subset of those returning real numbers, they have two arguments, l and m, such that l takes any positive integer value starting 0 and m ∈ \[0,l]   
 
+The brilliance of Green's implementation comes from exploiting the orthogonality and orthonormality attributes.
+
+To model a surface's reflectance is normally the integration of, incoming light multiplied by a transfer function depicting the surface's properties, over the whole sphere.  
+$_s$∫ L(s) t(s) ds
+If we project both the illumination and transfer functions into SH coefficients then orthogonality guarantees that the integral of the function’s products is the same as the dot product of their coefficients.  
+$$ _s∫ L(s) t(s) ds = \sum _{i=0} ^{n^2} L_i t_i $$
+
+SH coefficients are merely the constant part mutliplied by the spherical functions to approximate the points to be constructed by the true functions   
+Spherical functions project (associated) Legendre polynomials unto points across a sphere
+
+Spherical functions or from a functional point of view, the basis funtions return point sample of a Spherical Harmonic basis function.  
+
+The idea is that to get an approximation of reflection function, we take the sum of basis coefficients multiplied by basis functions over many samples.  
+Basis functions serve as an approximation to the real reflection function.  
+
+Points are sampled across bands, now that means that the true function will be reconstructed through a band limited approximation where band–limiting is just the process of breaking a signal into it’s component frequencies and removing frequencies higher than some threshold.  
+
+
+
+
+
+
 
 
 
 When we discuss the code 
+
 we introduce our optimization formulation that relies on differentiable ray tracing for image synthesis. By varying the number of ray-bounces against scene geometries and subsequent indirect illumination, self-shadows can be
 modeled.
 
