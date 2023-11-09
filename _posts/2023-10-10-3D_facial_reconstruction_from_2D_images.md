@@ -16,7 +16,9 @@ I will use [NextFace](https://github.com/abdallahdib/NextFace) which gave me the
 
 I also noticed that many parts of NextFace's code were adopted from other sources without further scrutinizing them, not noticing that some of that code was written, constricted by C++'s limitations and when put into python, could have been rewritten to get as low as half the execution time or even more, which I modified and tested myself.
 
-The modifications I introduced to the code, got better details in shadows and gets a speed increase of 25-40% depending on the number of bands(spherical harmonics) used, as the demand for better quality increases, my modifications seem to have a more prominent effect than using the original code which also highlights the cause to their remark of the diminishing returns when increasing the number of bands.
+The modifications I introduced to the code, got better details in shadows and gets a speed increase of 25-40% depending on the number of bands(spherical harmonics) used, and as the demand for better quality increases, my modifications seem to have a more prominent effect than using the original code which also highlights the cause to their remark of the diminishing returns when increasing the number of bands.
+
+One other problem which I can't discuss here as it needs a book, rotations, the algorithm implemented is very slow as reported by Green and the other more complex algorithm implemented by Choi is 10x faster and Choi writes "Comlex makes life easier!"
 
 ![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/Faces.png){: width="640" height="363" } 
 _[Well lit image example.]_
@@ -166,7 +168,7 @@ Points are sampled across bands, now that means that the true function will be r
 
 
 
-
+By projecting the light function and the transfer function(reflectance modeling function) to SH coefficients, orthogonality guraantees  that the integral of the functions's products is the same as the dot product of their coefficients.
 
 
 
