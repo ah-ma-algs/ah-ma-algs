@@ -171,7 +171,12 @@ Points are sampled across bands, now that means that the true function will be r
 By projecting the light function and the transfer function(reflectance modeling function) to SH coefficients, orthogonality guraantees  that the integral of the functions's products is the same as the dot product of their coefficients.
 
 
-
+We can mix and match SH lighting and normal lighting because light sums linearly, so we can use SH lighting for the ambient and
+diffuse part of a shader and add a specular term over the top. This
+is exactly what we did for the image of the car at the beginning of
+this document, first rendering the car body diffusely with SH
+lighting and alpha blending a pre-filtered specular environment
+map over the top.
 
 
 When we discuss the code 
