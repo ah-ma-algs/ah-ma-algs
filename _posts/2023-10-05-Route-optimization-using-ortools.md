@@ -60,7 +60,8 @@ That means we best convert our time in the durations matrix to minutes, that wil
 
 First we start with the duration inference callback which depends on the duration between the start point and the end point along the arc.  
 ```python
-def time_callback(from_idx, to_idx):
+def time_callback(from_idx: int,
+                  to_idx:   int) -> int:
         from_node, to_node = manager.IndexToNode(from_idx), manager.IndexToNode(to_idx)
         return data['durations_matrix'][from_node][to_node] + data['service_times'][from_node]
 ```
@@ -68,14 +69,15 @@ Checking ortools's [documentation](https://github.com/google/or-tools/blob/v9.4/
 
 Next is the distances between locations, which is another accumulated cost when a vehicle is traversing locations.
 ```python
-def distance_callback(from_idx, to_idx):
+def distance_callback(from_idx: int,
+                      to_idx:   int) -> int:
         from_node, to_node = manager.IndexToNode(from_idx), manager.IndexToNode(to_idx)
         return data['distances_matrix'][from_node][to_node]
 ```
 We can also assume there is a value that gets accumulated across locations, let that be an item getting picked up, a number of visited locations, a sized item or even a multivariate. 
 
 ```python
-def demand_callback(from_idx):
+def demand_callback(from_idx:   int) -> int:
         from_node = manager.IndexToNode(from_idx)
         return data['demands'][from_node]
 ```
