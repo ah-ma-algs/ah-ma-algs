@@ -18,7 +18,7 @@ I also noticed that many parts of NextFace's code were adopted from other source
 
 The modifications I introduced to the code, got better details in shadows and gets a speed increase of 25-40% depending on the number of bands(spherical harmonics) used, and as the demand for better quality increases, my modifications seem to have a more prominent effect than using the original code which also highlights the cause to their remark of the diminishing returns when increasing the number of bands.
 
-One other problem which I can't discuss here as it needs a book, rotations, the algorithm implemented is very slow as reported by Green and the other more complex algorithm implemented by Choi is 10x faster and Choi writes "Comlex makes life easier!"
+One other problem which I can't discuss here as it needs a book, rotations, the algorithm implemented is very slow as reported by Green and the other more complex algorithm for light rotations implemented by Choi is 10x faster and as Choi writes "Comlex makes life easier!"
 
 ![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/Faces.png){: width="640" height="363" } 
 _[Well lit image example.]_
@@ -35,7 +35,7 @@ Such results can vary drastially from one subject to another, some models can ou
 
 We can start with discussing the application as it can drastically affect the chosen method, Normally we either repurpose/train a method/network for our needs or we are lucky enough to have something that already fits out needs.  
 
-I will discuss some of the applications I encountered below, you can directly skip to the next paragraph where I discuss how I used nextface and my remarks on fine-tuning its parameters and the installation process actually being different that what's on their profile.  
+I will discuss some of the applications I encountered below, you can directly skip to the next paragraph where I discuss how I used nextface and my remarks on fine-tuning its parameters and the installation process actually being a bit different than what's on their profile.  
 
 ## Applications  
 3DMM based approaches perform facial biometrics extraction which means they can be useful for applications such as facial recognition as it extracts useful info other than just the facial landmarks.  
