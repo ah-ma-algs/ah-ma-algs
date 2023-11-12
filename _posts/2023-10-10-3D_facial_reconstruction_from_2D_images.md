@@ -4,7 +4,7 @@
  
 $$\left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)$$
 
-
+polynomial vs spline functions
 3D Facial reconstruction can be broadly defined as interpolating facial features from a 2D image/plane to 3D space.  
 The complexity arises due to environmental factors, application needs and computational complexity.  
 
