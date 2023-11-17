@@ -7,9 +7,28 @@ author: Ahmed
 toc: false
 ---
 
-Route optimization is used for all kinds of purposes, ranging from carpooling, Freight-hauling, taxi companies, nurses rostering, live maintenance services, etc.
+Route optimization is used for all kinds of purposes, ranging from carpooling, Freight-hauling, taxi companies, nurses rostering, live maintenance services, etc.  
+Such a problem is commonly referred to as the traveling salesman problem.  
+It can be mathematically related to the [hamiltonian game](https://en.wikipedia.org/wiki/Icosian_game) which arguably is the first solution to address the traveling salesman problem, The game's object was finding a Hamiltonian cycle along the edges of a dodecahedron such that every vertex is visited a single time, and the ending point is the same as the starting point.  
+Later in the 60s a different approach was taken, which we use a variation of, instead of seaking the most optimal solution, we search for a solution that satisfies a bound, let that bound be such that the length of the solution be a multiple of the optimal length, Such an approach allows as to represent the solution/path as a minimum spanning tree graph.  
+The most direct solution would be to try all permutations (ordered combinations) and see which one is cheapest (using brute-force search) which lies within the optimal factor of the number of nodes to be visited.  
+Instead, many heuristics and optimization algorithms are used to apporximate a solution that will be near enough to the most optimal solution.  
 
-The output required by a user can be as simple as
+It almost never is as simple as visiting nodes constructing the shortest graph possible, there are always are some constraints which makes it even harder, some constraints are harder than others, especially that we will use a tool to solve and each tool has its own limitations.  
+Normally you need to model a problem then solve such a model.  
+
+[IBM's Deep blue](https://en.wikipedia.org/wiki/Deep_Blue_(chess_computer)) which won Gary kasparov, used an adaptation of it (an evaluation function) using many to-be-determined parameters through analyzing thousands of master games going through many positions and endgames , the algorithms's capability was to search through 200 million chess positions per second with summary information
+
+There are many languages as well as python libraries out there for modelling optimization problems, and there are solvers for such models.  
+
+A language such as pymomo is a very powerful modelling tool where you can model your constraints, but solving methods for such constraints can either be done manually or using a third party, some are free, others are commercial.  
+
+When solving for vrp problems, you are better off with ortools as it has well developped solvers especially suited for vrp, it is developped in C++ but has a python interface that makes life tremendously easier while retaining virtually the same speed and most of the C++ version functionalities.  
+
+I have seen a developer working in google saying that they actually use it for google products.  
+
+
+The output required by a user can be as simple as  
 
 - A terminal output
 
