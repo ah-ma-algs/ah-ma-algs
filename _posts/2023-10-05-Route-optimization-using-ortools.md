@@ -9,24 +9,47 @@ toc: false
 
 Route optimization is used for all kinds of purposes, ranging from carpooling, Freight-hauling, taxi companies, nurses rostering, live maintenance services, etc.  
 Such a problem is commonly referred to as the traveling salesman problem.  
-It can be mathematically related to the [hamiltonian game](https://en.wikipedia.org/wiki/Icosian_game) which arguably is the first solution to address the traveling salesman problem, The game's object was finding a Hamiltonian cycle along the edges of a dodecahedron such that every vertex is visited a single time, and the ending point is the same as the starting point.  
-Later in the 60s a different approach was taken, which we use a variation of, instead of seaking the most optimal solution, we search for a solution that satisfies a bound, let that bound be such that the length of the solution be a multiple of the optimal length, Such an approach allows as to represent the solution/path as a minimum spanning tree graph.  
-The most direct solution would be to try all permutations (ordered combinations) and see which one is cheapest (using brute-force search) which lies within the optimal factor of the number of nodes to be visited.  
-Instead, many heuristics and optimization algorithms are used to apporximate a solution that will be near enough to the most optimal solution.  
+It can be mathematically related to the [hamiltonian game](https://en.wikipedia.org/wiki/Icosian_game) which arguably is the first solution to address the traveling salesman problem, The game's object was to find a Hamiltonian cycle along the edges of a dodecahedron such that every vertex is visited a single time, and the ending point is the same as the starting point.  
+Later in the 60s, a different approach was taken, which we use a variation of, instead of seeking the most optimal solution, we search for a solution that satisfies a bound, let that bound be such that the length of the solution be a multiple of the optimal length, Such an approach allows us to represent the solution/path as a minimum spanning tree graph.  
+The most direct solution would be to try all the permutations (ordered combinations) and see which one is cheapest (using brute-force search) which lies within the optimal factor of the number of nodes to be visited, that being an impossible solving method to the problem, many heuristics and optimization algorithms are used instead to approximate a solution that will be near enough to the most optimal solution.  
 
-It almost never is as simple as visiting nodes constructing the shortest graph possible, there are always are some constraints which makes it even harder, some constraints are harder than others, especially that we will use a tool to solve and each tool has its own limitations.  
+The solution almost never is as simple as visiting nodes constructing the shortest graph possible, there always are some constraints which make it even harder, some constraints are harder than others, especially that we will use a tool to solve and each tool has its own limitations.  
+Visiting thousands of locations using a single vehicle (Constructing a single graph) or multiple vehicles is almost always the first question even if the real world scenario won't contain more than a 100 locations.  
+Some of the main Constraints are:  
+* Having a time window per node such that a vehicle can only arrive within the boundaries of such a timewindow.  
+* A vehicle can only be a allowed to visit certain nodes based on some condition.  
+* A vehicle can have a capacity for pickup and dropoff problems with custom loading and unloading times.  
+* A vehicle can have start and end points, instead of using a depot.  
+* A vehicle can have a start and end time.  
+* A vehicle can have a max distance travelled.  
+* A vehicle can have a max number of nodes visited.
+
+The unconventional constraints could be:
+* Breaks (The worst and hardest constraint with ortools).
+* Refueling.
+* Multiple days routing.
+* optimize using an equation that spans over multiple parameters.
+*  
+
+Graphical Interface: can be done using google maps or any free service:  
+
+Check the routes, with different colors and markers on each stop displaying data when clicked and a seperate bouncy marker for starting location .
+
+
+* Shifts scheduling for drivers:  
 Normally you need to model a problem then solve such a model.  
 
-[IBM's Deep blue](https://en.wikipedia.org/wiki/Deep_Blue_(chess_computer)) which won Gary kasparov, used an adaptation of it (an evaluation function) using many to-be-determined parameters through analyzing thousands of master games going through many positions and endgames , the algorithms's capability was to search through 200 million chess positions per second with summary information
+[IBM's Deep blue](https://en.wikipedia.org/wiki/Deep_Blue_(chess_computer)) which won Gary kasparov, used an adaptation of it (an evaluation function) using many to-be-determined parameters through analyzing thousands of master games going through many positions and endgames ,the algorithm's capability was to search through 200 million chess positions per second with summary information.
 
 There are many languages as well as python libraries out there for modelling optimization problems, and there are solvers for such models.  
 
-A language such as pymomo is a very powerful modelling tool where you can model your constraints, but solving methods for such constraints can either be done manually or using a third party, some are free, others are commercial.  
+A language such as pyomo is a very powerful modelling tool where you can model your constraints, but solving methods for such constraints can either be done manually or using a third party, some are free, others are commercial.  
 
 When solving for vrp problems, you are better off with ortools as it has well developped solvers especially suited for vrp, it is developped in C++ but has a python interface that makes life tremendously easier while retaining virtually the same speed and most of the C++ version functionalities.  
 
 I have seen a developer working in google saying that they actually use it for google products.  
 
+It can be used for other purposes as discussed here (optimization algorithms) post.  
 
 The output required by a user can be as simple as  
 
@@ -67,15 +90,17 @@ Data can be present at any shape or form, it can be an excel sheet, a google she
 
 Reading the data and formulating it into manageable output is out of this post's scope and should be simple enough.  
 
-I will discuss the common requested features, as well as some uncommon ones and how I feed them to ortools as well as the theory behind that.   
+I will discuss the commonly requested features, as well as some uncommon ones and how I feed them to ortools as well as the theory behind that.   
 
 Normally each location will have a timewindow that needs to be respected.  
 
 How we represent time is the first thing to discuss, we can represent time in hours, minutes or seconds depending on the resolution that you would like but increasing the resolution means higher numerical values which could potentially mean numerical overflow or speed penalties due to used precision.  
 A day is 24 hours, 1440 minutes, 86400 seconds.  
-Using seconds as a metric is very useless for most use cases as a few seconds difference is irrelevant, but a few minutes difference can be a problem.  
-A truck 5 minutes late is 300 seconds late as well, do you see how in terms of numerical manipulation, one is much further away than the other with relation to start value (zero).  
-That means we best convert our time in the durations matrix to minutes, that will be faster than implementing such a logic within the duration inference callback 
+Using seconds as a metric is very useless for most use cases as a few seconds difference in arrival time has no prominent effect, but a few minutes difference can be a problem.   
+A truck 5 minutes late is 300 seconds late, do you see how in terms of numerical manipulation, one is much further away than the other with relation to the start value (zero).  
+That means we best convert our time in the durations matrix to minutes, that will be faster than implementing such a logic within the duration inference callback.  
+
+Getting the durations matrix can be done through many solutions, some are expensive and slow, some are fast and free, some have certain needed features/constraints when computing the matrices.  
 
 First we start with the duration inference callback which depends on the duration between the start point and the end point along the arc.  
 ```python
@@ -84,16 +109,17 @@ def time_callback(from_idx: int,
         from_node, to_node = manager.IndexToNode(from_idx), manager.IndexToNode(to_idx)
         return data['durations_matrix'][from_node][to_node] + data['service_times'][from_node]
 ```
-Checking ortools's [documentation](https://github.com/google/or-tools/blob/v9.4/ortools/constraint_solver/routing_index_manager.h#L92), IndexToNode is a function that returns **from_node** which is the node index corresponding to the location's index in our data mirroring **from_idx** which is its position in ortools's inner model of our problem  , That function referres to a C++ vector linking both values together.
+  
+Checking ortools's [documentation](https://github.com/google/or-tools/blob/v9.4/ortools/constraint_solver/routing_index_manager.h#L92) IndexToNode is a function that returns **from_node** which is the node index corresponding to the location's index in our data mirroring **from_idx** which is its position in ortools's inner model of our problem ,That function referres to a C++ vector linking both values together.  
 
-Next is the distances between locations, which is another accumulated cost when a vehicle is traversing locations.
+Next is the distances between locations, which is another accumulated cost when a vehicle is traversing locations.  
 ```python
 def distance_callback(from_idx: int,
                       to_idx:   int) -> int:
         from_node, to_node = manager.IndexToNode(from_idx), manager.IndexToNode(to_idx)
         return data['distances_matrix'][from_node][to_node]
 ```
-We can also assume there is a value that gets accumulated across locations, let that be an item getting picked up, a number of visited locations, a sized item or even a multivariate. 
+We can also assume that there is a value that gets accumulated across locations, let that be an item getting picked up, a number of visited locations, a sized item or even a multivariate.   
 
 ```python
 def demand_callback(from_idx:   int) -> int:
@@ -125,7 +151,7 @@ Assume an arc's start point is `i` and the end point is `j`.
 A graph is a number of connected arcs, in our case, they have a beginning and an end.  
 `MAX_CUMUL` is the maximum value that can be accumulated before reaching the last point along a full graph.  
 `MAX_SLACK` is the maximum slack that can be added to cumul at location `i` if needed such that we can reach location `j` at a certain value which can be pre-assigned.  
-We could use an analogy of a vehicle waiting at node `i` for a certain time (slack) to arrive (cumul) at a location `j` at the timewindow's start. **cumul<sub>j</sub> = cumul<sub>i</sub> + slack<sub>i</sub> + cost<sub>ij</sub>**  
+We could use an analogy of a vehicle waiting at node `i` for a certain time (slack) before moving to arrive (cumul) at a location `j` at its timewindow's start. **cumul<sub>j</sub> = cumul<sub>i</sub> + slack<sub>i</sub> + cost<sub>ij</sub>**  
 `SET_INITIAL_CUMUL_TO_ZERO` simply sets the start point's cumul of each graph to zero, for example, multiple vehicles can either all start at the same time at the day's start (zero cumul) or they can start at different times, in that case, a vehicle that starts one hour late is assumed to have accumulated 1 hour at start.  
 `Dimension_name` is what we use to call the dimension to maniuplate later.  
 
@@ -174,9 +200,9 @@ for idx in range(start_locations, no_of_locations):
         index = manager.NodeToIndex(idx)
         dimension.CumulVar(index).SetRange(window_start, window_end)
 ```
-But what if we want to allow multiple windows, multiple ranges of values that can be accumulated before arriving at such a point, Just like a vehicle can arrive at a location at **12:00 - 13:00**  or **14:00-15:00**, That means **12:00 >= accumulated time => 13:00  || 14:00 >= accumulated time => 15:00** 
-
-Assuming the the total accumulatable interval is  **0 => 16**
+But what if we want to allow multiple windows, multiple ranges of values that can be accumulated before arriving at such a point, Just like a vehicle can arrive at a location at **12:00 - 13:00**  or **14:00-15:00**, That means **12:00 >= accumulated time => 13:00  || 14:00 >= accumulated time => 15:00**  
+  
+Assuming the the total accumulatable interval is  **0 => 16**  
 
 ```python
 dimension.CumulVar(manager.NodeToIndex(index)).RemoveInterval(0,12)
@@ -184,7 +210,7 @@ dimension.CumulVar(manager.NodeToIndex(index)).RemoveInterval(13,14)
 dimension.CumulVar(manager.NodeToIndex(index)).RemoveInterval(15,16)
 ```
 
-or you can add a conditional constraint  
+or you can add a conditional constraint    
 That tells ortools, if a node is active then check if those conditions are obeyed, if true then output 1
 ```python
 expression = routing.solver().ConditionalExpression(routing.ActiveVar(manager.NodeToIndex(index)), # if this node is chosen among the solution.
