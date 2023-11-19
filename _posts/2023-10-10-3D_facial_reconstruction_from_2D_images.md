@@ -10,7 +10,7 @@ The complexity arises due to environmental factors, application needs and comput
 
 Recent learning-based approaches, in which models are trained by single-view images have shown promising results for monocular 3D face reconstruction, but they suffer from the ill-posed face problem and depth ambiguity issues.  
 
-3D face reconstruction techniques are generally categorized into some classes such as 3DMM, one shot learning, epipolar geomtry and maybe even shape from shading but as you go on, you will find that the most successive models are the hybrid ones and they all do use some methods from different classes in tandem.  
+3D face reconstruction methods use many techniques to model facial attributes priors, such techniques are generally categorized into some classes such as 3DMM, one shot learning, epipolar geomtry and maybe even shape from shading but as you go on, you will find that the most successive models are the hybrid ones and they all do use some techniques from different classes in tandem.  
 
 I will use [NextFace](https://github.com/abdallahdib/NextFace) which gave me the following results after many modifications for stability and better results, but I think discussing other models will be very fitting to better understand what we use, and why we chose it for this particular application.  
 
@@ -30,11 +30,8 @@ The modifications I introduced to the code, got better details in shadows and ge
 
 One other problem which I can't discuss here as it needs a book, rotations, the algorithm implemented is very slow as reported by Green and the other more complex algorithm for light rotations implemented by Choi is 10x faster and as Choi writes "Comlex makes life easier!"
 
-![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/Faces.png){: width="640" height="363" } 
-_[Well lit image example.]_
-
 ![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/optimized.gif){: width="640" height="363" } 
-_[All sides view animation.]_
+_[Well lit image example.]_
 
 I also tested many parameters on such a challenging image which I will discuss later.
 ![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/hugo.jpg){: width="640" height="363" } 
