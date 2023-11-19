@@ -33,6 +33,8 @@ One other problem which I can't discuss here as it needs a book, rotations, the 
 ![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/Faces.png){: width="640" height="363" } 
 _[Well lit image example.]_
 
+![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/optimized.gif){: width="640" height="363" } 
+_[All sides view animation.]_
 
 I also tested many parameters on such a challenging image which I will discuss later.
 ![Desktop View](/assets/img/2023-10-10-3D_facial_reconstruction_from_2D_images/hugo.jpg){: width="640" height="363" } 
